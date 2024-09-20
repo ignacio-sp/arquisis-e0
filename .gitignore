@@ -1,0 +1,7 @@
+**/node_modules
+**/.env
+**/*.txt
+asd.json
+*.pem
+*Zone.Identifier
+credentials.secret

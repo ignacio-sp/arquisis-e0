@@ -1,0 +1,56 @@
+services:
+  api:
+    build:
+      context: ./app 
+      dockerfile: Dockerfile
+    container_name: app
+    restart: unless-stopped
+    volumes:
+      - ./src:/app/src 
+    ports:
+      - "3000:3000" 
+    networks:
+      - app-network 
+    depends_on:
+      - db
+    environment:
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+
+
+  db:
+    image: postgres
+    container_name: postgres
+    networks:
+      - app-network 
+    environment: 
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: goatdb
+
+    volumes:
+      - db-volume:/var/lib/postgresql/data 
+      - ./db_init:/docker-entrypoint-initdb.d
+
+  mqtt-client:
+    build:
+      context: ./mqtt
+      dockerfile: Dockerfile
+    container_name: mqtt-client
+    networks:
+      - app-network
+    depends_on:
+      - api
+    environment:
+      API_URL: http://api:3000
+      HOST: ${HOST}
+      PORT: ${PORT}
+      USER: ${USER}
+      PASSWORD: ${PASSWORD}
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-volume:

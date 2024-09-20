@@ -1,0 +1,11 @@
+{
+  "name": "mqtt",
+  "version": "1.0.0",
+  "description": "mqtt client for goat broker",
+  "main": "mqtt.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.4",
+    "mqtt": "^5.10.0"
+  }
+}
